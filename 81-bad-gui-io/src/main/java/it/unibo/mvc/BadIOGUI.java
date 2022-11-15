@@ -5,17 +5,19 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -42,9 +44,36 @@ public class BadIOGUI {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
         final JButton write = new JButton("Write on file");
-        canvas.add(write, BorderLayout.CENTER);
+        /*canvas.add(write, BorderLayout.CENTER);*/
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        /*Ex 1.01*/
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
+        panel2.add(write);
+        canvas.add(panel2, BorderLayout.CENTER);
+
+        /*Ex 1.02 */
+        final JButton read = new JButton("READ");
+        panel2.add(read);
+
+        read.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                System.out.println("The button is press"); // NOPMD: allowed as this is just an exercise
+                System.out.println("Now we read the file"); // NOPMD: allowed as this is just an exercise
+                /*Ex 1.03 */
+                try (BufferedReader w = new BufferedReader(
+                    new InputStreamReader(
+                        new FileInputStream(PATH), StandardCharsets.UTF_8))) {
+                    System.out.println(w.readLine());  // NOPMD: allowed as this is just an exercise
+                } catch (IOException e1) {
+                    JOptionPane.showMessageDialog(frame, e1, "Error", JOptionPane.ERROR_MESSAGE);
+                    e1.printStackTrace(); // NOPMD: allowed as this is just an exercise
+                }
+            }
+        });
         /*
          * Handlers
          */
@@ -90,6 +119,7 @@ public class BadIOGUI {
         /*
          * OK, ready to push the frame onscreen
          */
+        frame.pack();
         frame.setVisible(true);
     }
 
